@@ -16,8 +16,8 @@
   "module": "dist/esm/index.js",
   "scripts": {
     "build": "rm -rf dist/ && yarn run build:esm && yarn run build:cjs",
-    "build:esm": "tsc",
-    "build:cjs": "tsc --module CommonJS --outdir dist/cjs"
+    "build:esm": "tsc index.ts --outdir dist/esm",
+    "build:cjs": "tsc index.ts --module CommonJS --outdir dist/cjs"
   },
   "description": "This npm package allows you to convert your org file to json, and back.",
   "devDependencies": {
