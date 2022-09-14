@@ -5,6 +5,9 @@ export const org = `
 ** hello
 *** bye
 ** js
+:PROPERTIES:
+:hi: hello
+:END:
 
 * hi
   ntehneth
@@ -56,7 +59,9 @@ export const orgInJson = [
         tags: [],
         items: [],
         level: 2,
-        properties: {},
+        properties: {
+          "hi": "hello",
+        },
       },
     ],
     level: 1,
