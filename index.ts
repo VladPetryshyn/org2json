@@ -8,14 +8,20 @@ export interface Note {
   properties: { [key: string]: string };
 }
 
-export type Notes = Array<Note>;
+// export interface Title {
+//   title: string;
+//   belongsTo: Array<number>;
+// }
+
+export type Notes = Note[];
+// export type Titles = Array<Title>;
 
 /**
  * Converts org string to json
  * @constructor
  * @param {string} f - array of type Note
  */
-export const orgToJson = (f: string): Notes => {
+export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
   const file = f.split("\n").filter((n) => n.trim() !== "");
 
   const countLevel = (i: number, item: string): [number, number] => {
@@ -50,7 +56,7 @@ export const orgToJson = (f: string): Notes => {
   };
 
   const extractProperties = (item: string) => {
-    const properties: { [key: string]: string } = {}
+    const properties: { [key: string]: string } = {};
 
     if (item[0] !== ":" || !item.includes(":PROPERTIES:")) {
       return null;
@@ -58,15 +64,18 @@ export const orgToJson = (f: string): Notes => {
 
     while (file.length > 0) {
       const it = file.shift()!;
-      const idx = it.indexOf(":", 1)
+      const idx = it.indexOf(":", 1);
       if (it[0] !== ":" || it.includes(":END:") || idx === -1) break;
-      properties[it.substring(1, idx)] = it.substring(idx + 1).trim()
+      properties[it.substring(1, idx)] = it.substring(idx + 1).trim();
     }
 
     return properties;
-  }
+  };
 
   const notes = [];
+  const tags: Array<string> = [];
+  // const titles: Array<Title> = [];
+
   let previous: { [n: number]: Note } = {};
   let prevLvl = -Infinity;
 
@@ -83,7 +92,7 @@ export const orgToJson = (f: string): Notes => {
     };
 
     let level = 0;
-    for (let i = 0; i < item!.length;) {
+    for (let i = 0; i < item!.length; ) {
       if (new RegExp(/\*/).test(item![i]) && i === 0) {
         // level
         const [lvl, ni] = countLevel(i, item!);
@@ -98,6 +107,7 @@ export const orgToJson = (f: string): Notes => {
         const [tag, ni] = extractTag(i + 1, item);
         i = ni;
         note.tags.push(tag);
+        tags.push(tag);
       } else if (new RegExp(/[A-Z]/).test(item[i]) && i - 1 === level) {
         // state
         const [state, ni] = extractState(i, item);
@@ -129,7 +139,7 @@ export const orgToJson = (f: string): Notes => {
     previous[level] = note;
   }
 
-  return notes;
+  return { notes, tags };
 };
 
 /**
@@ -144,8 +154,11 @@ export const jsonToOrg = (notes: Notes): string => {
   const buildTags = (tags: Array<string>) =>
     tags.reduce((curr, acc) => curr + ` :${acc}:`, "");
 
-  const buildProperties = (properties: { [key: string]: string }) => `:PROPERTIES:\n${Object.keys(properties)
-    .reduce((acc, curr) => `${acc}:${curr}: ${properties[curr]}\n`, "")}:END:\n`
+  const buildProperties = (properties: { [key: string]: string }) =>
+    `:PROPERTIES:\n${Object.keys(properties).reduce(
+      (acc, curr) => `${acc}:${curr}: ${properties[curr]}\n`,
+      ""
+    )}:END:\n`;
 
   for (let item of notes) {
     const tags = buildTags(item.tags);
@@ -154,7 +167,10 @@ export const jsonToOrg = (notes: Notes): string => {
     file += ` ${item.title}`;
     file += tags ? ` ${tags}` : "";
     file += "\n";
-    file += Object.keys(item.properties).length > 0 ? buildProperties(item.properties) : "";
+    file +=
+      Object.keys(item.properties).length > 0
+        ? buildProperties(item.properties)
+        : "";
     file += item.description ? `${item.description}\n` : "";
     file += jsonToOrg(item.items);
   }

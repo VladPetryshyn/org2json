@@ -4,9 +4,9 @@ import { org, orgInJson } from "../testHelpers/constants";
 describe("testing basic functionality", () => {
   let json: Array<Note> = [];
   beforeAll(() => {
-    json = orgToJson(org);
+    json = orgToJson(org).notes;
   });
   it("should parse org syntax", () => {
-    expect(json).toEqual(orgInJson);
+    expect(json).toEqual(orgInJson.notes);
   });
 });
