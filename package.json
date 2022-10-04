@@ -22,5 +22,8 @@
     "typescript": "^4.8.2"
   },
   "author": "Vlad Petryshyn",
-  "license": "GPLv3"
+  "license": "GPLv3",
+  "dependencies": {
+    "uuidv4": "^6.2.13"
+  }
 }

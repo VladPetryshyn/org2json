@@ -1,3 +1,5 @@
+import { uuid } from "uuidv4";
+
 export interface Note {
   title: string;
   description: string;
@@ -56,17 +58,21 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
   };
 
   const extractProperties = (item: string) => {
-    const properties: { [key: string]: string } = {};
+    const properties: { [key: string]: string } = {
+      id: uuid(),
+    };
 
     if (item[0] !== ":" || !item.includes(":PROPERTIES:")) {
-      return null;
+      return properties;
     }
 
     while (file.length > 0) {
       const it = file.shift()!;
       const idx = it.indexOf(":", 1);
       if (it[0] !== ":" || it.includes(":END:") || idx === -1) break;
-      properties[it.substring(1, idx)] = it.substring(idx + 1).trim();
+      properties[it.substring(1, idx).toLowerCase()] = it
+        .substring(idx + 1)
+        .trim();
     }
 
     return properties;
@@ -125,7 +131,8 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
 
     if (level === 0) {
       const properties = extractProperties(item);
-      if (!properties) {
+      if (Object.keys(properties).length < 2) {
+        previous[prevLvl].properties = properties;
         previous[prevLvl].description += item.trim() + "\n";
       } else {
         previous[prevLvl].properties = properties;
