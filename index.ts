@@ -1,4 +1,4 @@
-import { uuid } from "uuidv4";
+import { v4 } from "uuid";
 
 export interface Note {
   title: string;
@@ -59,7 +59,7 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
 
   const extractProperties = (item: string) => {
     const properties: { [key: string]: string } = {
-      id: uuid(),
+      id: v4(),
     };
 
     if (item[0] !== ":" || !item.includes(":PROPERTIES:")) {

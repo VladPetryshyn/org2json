@@ -1,6 +1,6 @@
 {
   "name": "org2json",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "respository": {
     "type": "git",
     "url": "https://github.com/VladPetryshyn/org2json"
@@ -24,6 +24,6 @@
   "author": "Vlad Petryshyn",
   "license": "GPLv3",
   "dependencies": {
-    "uuidv4": "^6.2.13"
+    "uuid": "^9.0.0"
   }
 }
