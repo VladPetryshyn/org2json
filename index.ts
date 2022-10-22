@@ -39,10 +39,12 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
   const extractTag = (i: number, item: string): [string, number] => {
     let tag = "";
     for (; i < item.length; i++) {
-      if (!new RegExp(/\:/).test(item[i])) {
-        tag += item[i];
-      } else break;
+      if (new RegExp(/\:/).test(item[i])) {
+        break;
+      }
+      tag += item[i];
     }
+    if (tag.includes("//")) return ["", 0];
     return [tag, i];
   };
 
@@ -109,9 +111,12 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
       } else if (new RegExp(/\:/).test(item[i])) {
         //tag
         const [tag, ni] = extractTag(i + 1, item);
-        i = ni;
-        note.tags.push(tag);
-        tags.push(tag);
+        if (tag) {
+          i = ni;
+          note.tags.push(tag);
+          tags.push(tag);
+        }
+        i++;
       } else if (new RegExp(/[A-Z]/).test(item[i]) && i - 1 === level) {
         // state
         const [state, ni] = extractState(i, item);
