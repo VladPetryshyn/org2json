@@ -58,12 +58,10 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
   };
 
   const extractProperties = (item: string) => {
-    const properties: { [key: string]: string } = {
-      id: v4(),
-    };
+    const properties: { [key: string]: string } = {};
 
     if (item[0] !== ":" || !item.includes(":PROPERTIES:")) {
-      return properties;
+      return;
     }
 
     while (file.length > 0) {
@@ -94,7 +92,7 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
       tags: [],
       items: [],
       level: 0,
-      properties: {},
+      properties: { id: v4() },
     };
 
     let level = 0;
@@ -131,11 +129,13 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
 
     if (level === 0) {
       const properties = extractProperties(item);
-      if (Object.keys(properties).length < 2) {
-        previous[prevLvl].properties = properties;
-        previous[prevLvl].description += item.trim() + "\n";
+      if (properties) {
+        previous[prevLvl].properties = {
+          ...previous[prevLvl].properties,
+          ...properties,
+        };
       } else {
-        previous[prevLvl].properties = properties;
+        previous[prevLvl].description += item.trim() + "\n";
       }
       continue;
     } else if (previous[level - 1] && previous[level - 1].level < level) {

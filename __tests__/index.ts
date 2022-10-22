@@ -7,6 +7,6 @@ describe("testing basic functionality", () => {
     json = orgToJson(org).notes;
   });
   it("should parse org syntax", () => {
-    // expect(json).toEqual(orgInJson.notes);
+    // expect(json).toEqual({});
   });
 });
