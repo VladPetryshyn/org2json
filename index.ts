@@ -10,10 +10,9 @@ export interface Note {
   properties: { [key: string]: string };
 }
 
-// export interface Title {
-//   title: string;
-//   belongsTo: Array<number>;
-// }
+interface Tags {
+  [key: string]: number;
+}
 
 export type Notes = Note[];
 // export type Titles = Array<Title>;
@@ -23,7 +22,7 @@ export type Notes = Note[];
  * @constructor
  * @param {string} f - array of type Note
  */
-export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
+export const orgToJson = (f: string): { notes: Notes; tags: Tags } => {
   const file = f.split("\n").filter((n) => n.trim() !== "");
 
   const countLevel = (i: number, item: string): [number, number] => {
@@ -79,8 +78,7 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
   };
 
   const notes = [];
-  const tags: Array<string> = [];
-  // const titles: Array<Title> = [];
+  const tags: Tags = {};
 
   let previous: { [n: number]: Note } = {};
   let prevLvl = -Infinity;
@@ -98,7 +96,7 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
     };
 
     let level = 0;
-    for (let i = 0; i < item!.length; ) {
+    for (let i = 0; i < item!.length;) {
       if (new RegExp(/\*/).test(item![i]) && i === 0) {
         // level
         const [lvl, ni] = countLevel(i, item!);
@@ -114,7 +112,7 @@ export const orgToJson = (f: string): { notes: Notes; tags: Array<string> } => {
         if (tag) {
           i = ni;
           note.tags.push(tag);
-          tags.push(tag);
+          tags[tag] = tags[tag] ? ++tags[tag] : 1
         }
         i++;
       } else if (new RegExp(/[A-Z]/).test(item[i]) && i - 1 === level) {
