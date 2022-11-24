@@ -109,7 +109,12 @@ export const orgToJson = (f: string): { notes: Notes; tags: Tags } => {
       } else if (new RegExp(/\:/).test(item[i])) {
         //tag
         const [tag, ni] = extractTag(i + 1, item);
-        if (tag && level >= 1) {
+        if (ni === 0) {
+          note.title += item[i];
+          i++;
+          continue;
+        }
+        if (tag && level >= 1 && ni > 0) {
           i = ni;
           note.tags.push(tag);
           tags[tag] = tags[tag] ? ++tags[tag] : 1

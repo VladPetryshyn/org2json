@@ -1,29 +1,5 @@
 export const org = `
-* TODO hello world :Hello::Chao::oleg:
-  thniantehatneohanoiahs>
-  tnheaentoahneotheotehsa
-** hello
-*** bye
-** js
-:PROPERTIES:
-:hi: hello
-:END:
-
-* hi
-  ntehneth
-** the
-   nethneothasnoitnhseatnohiatneonhtitahsni
-*** tnhe
-    tnheatneohaoithsaothsaoitnehsitnesa<
-    ntihanetoahneotnesaotenosatenoas
-**** tnheoneo
-     ntheanteohasneothsaneothsnaotash[
-***** thneitneh
-      tnehsanteahsenthas
-     
-* tnhe
-  ntehanteohsneothsaneothaesn
-**** he
+* TODO https://oleg.com :hello: :ho:
     `;
 
 export const orgInJson = {
